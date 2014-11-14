@@ -3,7 +3,7 @@
 all: compile run
 
 run:
-	@ ./smooth < ./in/1.ppm
+	@ ./smooth < ./in/in.ppm
 	
 compile: smooth.c
 	@gcc smooth.c -o smooth
