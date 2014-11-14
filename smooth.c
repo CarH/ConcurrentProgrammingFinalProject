@@ -38,11 +38,11 @@ int main(){
 	
 	/// alocar rgb
 	for(i=0; i < 3; i++){
-		rgb[i] = (byte**)calloc(width, sizeof(byte*));
-		result[i] = (byte**)calloc(width, sizeof(byte*));
-		for(j=0; j < width; j++){
-			rgb[i][j] = (byte*)calloc(height, sizeof(byte));
-			result[i][j] = (byte*)calloc(height, sizeof(byte));
+		rgb[i] = (byte**)calloc(height, sizeof(byte*));
+		result[i] = (byte**)calloc(height, sizeof(byte*));
+		for(j=0; j < height; j++){
+			rgb[i][j] = (byte*)calloc(width, sizeof(byte));
+			result[i][j] = (byte*)calloc(width, sizeof(byte));
 		}
 	}
 	
@@ -66,38 +66,42 @@ int main(){
 	// 	printf("\n");
 	// }
 
-	// byte c=0;
-	// byte x=1, y=4.3;
-	// c = (byte)x+y;
-	// 			printf("%d ", c);
-	unsigned int soma=0;
-	printf("P3\n%d %d\n%d", width, height, maxValue);
+
+	printf("P3\n%d %d\n%d\n", width, height, maxValue);
+	unsigned int soma = 0;
+	
 	/// Calculo das médias:
 	for(i=0; i < height; i++){
 		for(j=0; j < width; j++){
 			for(k=0; k < 3; k++){
-				soma = 0;
-				for(m=j+max(0, j-3); m<j+min(3, width-j); m++){ // para calcular a media
-					for(n=i+max(0, i-3); n<i+min(3, height-i); n++){
+				
+				unsigned int limitX = j+min(3, width-j);
+				unsigned int limitY = i+min(3, height-i);
+				
+				for(m = max(0, j-2); m < limitX; m++){ // para calcular a media
+					for(n = max(0, i-2); n < limitY; n++){
 						soma += rgb[k][n][m];
 					}
 				}
-				// printf(" SOMA: %d\n", soma);
-				result[k][i][j] = (byte)((unsigned int)soma/(SIDE*SIDE));
-				printf("%3d ", (byte)result[k][i][j]);
+				
+				///printf("%2d %2d - %2d %2d\n",inicX, limitX, inicY, limitY);
+				/// printf("%2d %2d : %d\n", j, i, soma);
+				
+				result[k][i][j] = (byte)((unsigned int)soma/25);
+				printf("%-3d ", (byte)result[k][i][j]);
 			}
 		}
 		printf("\n");
 	}
 
 	/// desalocar rgb
-	// for(i=0; i < 3; i++){
-		// for(j=0; j < width; j++){
-			// free(rgb[i][j]);
-			// free(result[i][j]);
-		// }
-		// free(rgb[i]);
-		// free(result[i]);
-	// }
+	 for(i=0; i < 3; i++){
+		 for(j=0; j < height; j++){
+			 free(rgb[i][j]);
+			 free(result[i][j]);
+		 }
+		 free(rgb[i]);
+		 free(result[i]);
+	 }
 	return 0;
 }
