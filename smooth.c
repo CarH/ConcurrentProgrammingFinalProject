@@ -21,7 +21,7 @@ int min(int a, int b){
 int main(){
 	byte** rgb[3], **result[3];
 	char format[3];
-	int i, j, k, m, n, width, height, maxValue, value;
+	int i, j, k, m, n, width, height, maxValue, value, soma;
 	
 	scanf("%s", format);
 	scanf("%d %d %d", &width, &height, &maxValue);
@@ -36,7 +36,7 @@ int main(){
 		return -1;
 	}
 	
-	/// alocar rgb
+	/// alocar as matrizes rgb
 	for(i=0; i < 3; i++){
 		rgb[i] = (byte**)calloc(height, sizeof(byte*));
 		result[i] = (byte**)calloc(height, sizeof(byte*));
@@ -46,7 +46,7 @@ int main(){
 		}
 	}
 	
-	/// le os valores
+	/// le os valores rgb de cada pixel da imagem
 	for(i=0; i < height; i++){
 		for(j=0; j < width; j++){
 			for(k=0; k < 3; k++){
@@ -57,44 +57,52 @@ int main(){
 	}
 	
 	/// exibe na tela
-	// for(i=0; i < height; i++){
-	// 	for(j=0; j < width; j++){
-	// 		for(k=0; k < 3; k++){
-	// 			printf("%3d ", (byte)rgb[k][i][j]);
-	// 		}
-	// 	}
-	// 	printf("\n");
-	// }
+	 /*for(i=0; i < height; i++){
+	 	for(j=0; j < width; j++){
+	 		k=0;
+	 		for(k=0; k < 3; k++){
+	 			printf("%3d ", (byte)rgb[k][i][j]);
+	 		}
+	 	}
+	 	printf("\n");
+	 }*/
 
-
-	printf("P3\n%d %d\n%d\n", width, height, maxValue);
-	unsigned int soma = 0;
 	
-	/// Calculo das médias:
-	for(i=0; i < height; i++){
-		for(j=0; j < width; j++){
-			for(k=0; k < 3; k++){
+	/// Calculo da média de cada bloco de 5x5 pixel
+	for(k=0; k < 3; k++){
+		for(i=0; i < height; i++){
+			for(j=0; j < width; j++){
 				
 				unsigned int limitX = j+min(3, width-j);
 				unsigned int limitY = i+min(3, height-i);
+				unsigned int inicX = max(0, j-2);
+				unsigned int inicY = max(0, i-2);
 				
-				for(m = max(0, j-2); m < limitX; m++){ // para calcular a media
-					for(n = max(0, i-2); n < limitY; n++){
+				soma=0;	
+				for(m = inicX; m < limitX; m++){ // para calcular a media
+					for(n = inicY; n < limitY; n++){
 						soma += rgb[k][n][m];
 					}
 				}
-				
-				///printf("%2d %2d - %2d %2d\n",inicX, limitX, inicY, limitY);
-				/// printf("%2d %2d : %d\n", j, i, soma);
-				
 				result[k][i][j] = (byte)((unsigned int)soma/25);
+			}
+		}
+	}
+	
+	/// Exibe o cabecalho
+	printf("P3\n%d %d\n%d\n", width, height, maxValue);
+	
+	/// Exibe os valores rgb de cada pixel da imagem
+	for(i=0; i < height; i++){
+		for(j=0; j < width; j++){
+			for(k=0; k < 3; k++){
 				printf("%-3d ", (byte)result[k][i][j]);
 			}
 		}
 		printf("\n");
 	}
 
-	/// desalocar rgb
+	/// desalocar as matrizes rgb
 	 for(i=0; i < 3; i++){
 		 for(j=0; j < height; j++){
 			 free(rgb[i][j]);
