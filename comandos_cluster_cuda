@@ -1,0 +1,5 @@
+ssh grupo-08a@andromeda.lasdpc.icmc.usp.br -p 2010
+
+senha: baquetafukuda
+
+scp -P 2010 example1.c Makefile grupo-08a@andromeda.lasdpc.icmc.usp.br:/home/grupo-08a/
