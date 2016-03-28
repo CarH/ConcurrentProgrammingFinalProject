@@ -1,2 +1,2 @@
 #ProgConc / Parallel Programming 
-This directory refers to the final assignment of the Parallel Programming course.
+This directory refers to the final assignment of the Parallel Programming discipline.
